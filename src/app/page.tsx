@@ -1,4 +1,5 @@
 import { getAllCompanies } from '../services/companies'
+import Link from 'next/link'
 
 export default async function Home() {
   const companies = await getAllCompanies()
@@ -10,12 +11,11 @@ export default async function Home() {
       <div className="w-full max-w-2xl">
         <ul className="space-y-4">
           {companies.map((company) => (
-            <li
-              key={company._id?.toString()}
-              className="p-4 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors"
-            >
-              <h2 className="text-xl font-semibold">{company.name}</h2>
-            </li>
+            <Link key={company._id?.toString()} href={`/${company._id?.toString()}`}>
+              <li className="p-4 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+                <h2 className="text-xl font-semibold">{company.name}</h2>
+              </li>
+            </Link>
           ))}
         </ul>
       </div>

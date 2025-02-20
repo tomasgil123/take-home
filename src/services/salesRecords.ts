@@ -4,11 +4,17 @@ import { Collection, ObjectId } from 'mongodb'
 // Define interfaces for your document types
 export interface SalesRecord {
   _id?: ObjectId
-  companyId: string
-  amount: number
+  companyId: ObjectId
+  metrics: {
+    totalSales: number
+    orderCount: number
+    averageOrderValue: number
+    topCategory: string
+    customerSatisfaction: number
+    newCustomers: number
+    returnRate: number
+  }
   date: Date
-  description?: string
-  // Add other fields as needed
 }
 
 /**
@@ -21,8 +27,11 @@ export async function getCompanySalesRecords(companyId: string): Promise<SalesRe
     const db = await connectToDb() // Wait for connection and get db instance
     const collection: Collection<SalesRecord> = db.collection('SalesRecords')
 
+    // Convert the string companyId to ObjectId before querying
+    const query = { companyId: new ObjectId(companyId) }
+
     const salesRecords = await collection
-      .find({ companyId })
+      .find(query)
       .sort({ date: -1 }) // Sort by date descending (newest first)
       .toArray()
 
